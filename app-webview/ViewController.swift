@@ -7,14 +7,34 @@
 //
 
 import UIKit
+import WebKit
 
 class ViewController: UIViewController {
-
+    var webView: WKWebView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        // 1
+        let url = URL(string: "https://devnf-invistacompi.cs14.force.com/s/")!
+        webView.load(URLRequest(url: url))
+        
+        // 2
+        let refresh = UIBarButtonItem(barButtonSystemItem: .refresh, target: webView, action: #selector(webView.reload))
+        toolbarItems = [refresh]
+        navigationController?.isToolbarHidden = false
     }
+}
 
-
+extension ViewController: WKNavigationDelegate {
+    override func loadView() {
+        webView = WKWebView()
+        webView.navigationDelegate = self
+        view = webView
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        title = webView.title
+    }
 }
 
